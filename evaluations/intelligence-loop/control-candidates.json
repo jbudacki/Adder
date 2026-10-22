@@ -1,0 +1,86 @@
+[
+  {
+    "schema_version": "1.0.0",
+    "record_id": "ADDER-INTEL-001",
+    "source_evidence": [
+      {
+        "assessment_id": "syn-reality-avatar-2026-09-25",
+        "finding_id": "ADDER-AUTH-001",
+        "evidence_type": "validated_finding",
+        "reference": "evaluations/pilot/runs/syn-reality-avatar-2026-09-25/",
+        "human_validator": null
+      }
+    ],
+    "validation_status": "agent_validated",
+    "root_cause": "A sensitive operation can be implemented without an operation-level authorization guard.",
+    "proposed_control": {
+      "control_type": "skill_rule",
+      "name": "Require authorization evidence at sensitive route sinks",
+      "description": "Flag sensitive route handlers when repository evidence does not demonstrate operation-level authorization.",
+      "version": "0.1.0"
+    },
+    "applicability": {
+      "scope": "HTTP services with state-changing or privileged routes",
+      "technologies": ["Express", "JavaScript", "TypeScript"],
+      "exclusions": ["Routes with independently verified operation-level authorization require human confirmation before suppression"]
+    },
+    "expected_benefit": "Reduce authorization omissions at privileged application sinks.",
+    "false_positive_risk": "medium",
+    "validation_cases": [
+      {"case_type": "positive", "reference": "ADDER-AUTH-001", "result": "pass"},
+      {"case_type": "negative", "reference": "synthetic-authenticated-route", "result": "not_run"},
+      {"case_type": "ambiguous", "reference": "upstream-gateway-only", "result": "not_run"},
+      {"case_type": "rollback", "reference": "disable-advisory-rule", "result": "not_run"}
+    ],
+    "lifecycle_status": "candidate",
+    "owner": null,
+    "approval_references": [],
+    "promotion_blockers": ["Human validation", "Named control owner", "Complete fixtures", "Broader repository cohort"],
+    "rollback_trigger": "Material false positives or inability to prove the authorization boundary.",
+    "created_at": "2026-09-25T00:00:00Z",
+    "review_by": "2026-10-25",
+    "limitations": ["Derived from one repository", "No human adjudication recorded"]
+  },
+  {
+    "schema_version": "1.0.0",
+    "record_id": "ADDER-INTEL-002",
+    "source_evidence": [
+      {
+        "assessment_id": "syn-reality-avatar-2026-09-25",
+        "finding_id": "ADDER-CI-001",
+        "evidence_type": "validated_finding",
+        "reference": "evaluations/pilot/runs/syn-reality-avatar-2026-09-25/",
+        "human_validator": null
+      }
+    ],
+    "validation_status": "agent_validated",
+    "root_cause": "CI can execute repository-selected code in a context that may hold privileged tokens.",
+    "proposed_control": {
+      "control_type": "scanner_rule",
+      "name": "Detect untrusted code execution in privileged CI contexts",
+      "description": "Identify jobs where untrusted repository content may execute with write-capable credentials or protected secrets.",
+      "version": "0.1.0"
+    },
+    "applicability": {
+      "scope": "Continuous-integration workflows processing untrusted changes",
+      "technologies": ["GitLab CI", "GitHub Actions", "shell"],
+      "exclusions": ["Read-only isolated jobs with no secrets or privileged tokens, verified by platform policy"]
+    },
+    "expected_benefit": "Reduce credential exposure and unauthorized repository mutation from untrusted CI execution.",
+    "false_positive_risk": "high",
+    "validation_cases": [
+      {"case_type": "positive", "reference": "ADDER-CI-001", "result": "pass"},
+      {"case_type": "negative", "reference": "isolated-read-only-job", "result": "not_run"},
+      {"case_type": "ambiguous", "reference": "fork-policy-dependent-job", "result": "not_run"},
+      {"case_type": "rollback", "reference": "disable-advisory-rule", "result": "not_run"}
+    ],
+    "lifecycle_status": "candidate",
+    "owner": null,
+    "approval_references": [],
+    "promotion_blockers": ["Human validation", "Platform-policy context", "Named control owner", "Complete fixtures", "Broader repository cohort"],
+    "rollback_trigger": "Platform policy disproves the privilege path or the rule produces material noise.",
+    "created_at": "2026-09-25T00:00:00Z",
+    "review_by": "2026-10-25",
+    "limitations": ["Derived from one repository", "CI provider behavior was not tested live"]
+  }
+]

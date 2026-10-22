@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/provenance.schema.json",
+  "title": "ADDER Provenance Record",
+  "description": "Captured provenance for a software change; absence of evidence must not be interpreted as human authorship.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "verification_status",
+    "repository",
+    "commit",
+    "human_owner",
+    "material_ai_assistance"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "verification_status": {
+      "enum": ["verified", "partially_verified", "unverifiable", "inconsistent"]
+    },
+    "repository": { "type": "string", "minLength": 1 },
+    "commit": { "type": "string", "minLength": 1 },
+    "merge_request": { "type": "string" },
+    "human_owner": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "null" }
+      ]
+    },
+    "accountable_reviewer": { "type": "string" },
+    "material_ai_assistance": { "enum": ["declared", "not_declared", "unknown"] },
+    "assistant_or_agent": { "type": "string" },
+    "model": { "type": "string" },
+    "provider": { "type": "string" },
+    "session_or_run_id": { "type": "string" },
+    "execution_environment": { "type": "string" },
+    "changed_artifacts": { "type": "array", "items": { "type": "string" } },
+    "agent_permissions": { "type": "array", "items": { "type": "string" } },
+    "attestation_references": { "type": "array", "items": { "type": "string" } },
+    "evidence_sources": { "type": "array", "items": { "type": "string" } },
+    "inconsistencies": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

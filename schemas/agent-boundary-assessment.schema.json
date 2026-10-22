@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/agent-boundary-assessment.schema.json",
+  "title": "ADDER Agent Boundary Assessment",
+  "description": "A comparison of approved and observed coding-agent authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "agent",
+    "subject",
+    "boundaries",
+    "overall_status",
+    "findings",
+    "required_actions",
+    "assessed_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "assessment_id": { "type": "string", "minLength": 1 },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity_type", "human_owner"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "identity_type": { "enum": ["human_delegated", "non_human", "shared", "unknown"] },
+        "identity_reference": { "type": "string" },
+        "human_owner": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "session_or_run_id": { "type": "string" },
+        "execution_environment": { "type": "string" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string" },
+        "merge_request": { "type": "string" },
+        "approved_task": { "type": "string" },
+        "policy_reference": { "type": "string" }
+      }
+    },
+    "boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capability",
+          "approved_scope",
+          "observed_or_configured_scope",
+          "status",
+          "evidence",
+          "approval_required"
+        ],
+        "properties": {
+          "capability": {
+            "enum": [
+              "identity",
+              "repository_read",
+              "repository_write",
+              "branch",
+              "worktree",
+              "filesystem",
+              "shell",
+              "network",
+              "package_registry",
+              "secrets",
+              "commit",
+              "push",
+              "merge",
+              "ci_cd",
+              "deployment",
+              "logging",
+              "attribution"
+            ]
+          },
+          "approved_scope": { "type": "array", "items": { "type": "string" } },
+          "observed_or_configured_scope": { "type": "array", "items": { "type": "string" } },
+          "status": { "enum": ["within_boundary", "gap", "violation", "unverifiable"] },
+          "evidence": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "approval_required": { "type": "boolean" },
+          "limitations": { "type": "array", "items": { "type": "string" } },
+          "corrective_action": { "type": "string" }
+        }
+      }
+    },
+    "overall_status": { "enum": ["within_boundary", "gap", "violation", "unverifiable"] },
+    "findings": { "type": "array", "items": { "$ref": "finding.schema.json" } },
+    "required_actions": { "type": "array", "items": { "type": "string" } },
+    "required_approvals": { "type": "array", "items": { "type": "string" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "assessed_at": { "type": "string", "format": "date-time" }
+  }
+}
+

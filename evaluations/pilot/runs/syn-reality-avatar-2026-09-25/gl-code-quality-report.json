@@ -1,0 +1,266 @@
+[
+  {
+    "description": "Administrative and sensitive API operations lack application authorization \u2014 Require authenticated identities and server-side role or ownership checks at each sensitive operation; deny by default and independently test unauthorized roles.",
+    "check_name": "ADDER authorization",
+    "fingerprint": "077f5460aecfcedb85ad498c1aa7a79bbd71d3ec9dc6c477c96eac943358594c",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/routes/index.ts",
+      "lines": {
+        "begin": 61
+      }
+    }
+  },
+  {
+    "description": "Administrative and sensitive API operations lack application authorization \u2014 Require authenticated identities and server-side role or ownership checks at each sensitive operation; deny by default and independently test unauthorized roles.",
+    "check_name": "ADDER authorization",
+    "fingerprint": "807e940b4fa4f6f2e56c516bd7a61bb6e784c179c033e12a055f4bcd1d2e3df6",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/controllers/report.controller.ts",
+      "lines": {
+        "begin": 15
+      }
+    }
+  },
+  {
+    "description": "Administrative and sensitive API operations lack application authorization \u2014 Require authenticated identities and server-side role or ownership checks at each sensitive operation; deny by default and independently test unauthorized roles.",
+    "check_name": "ADDER authorization",
+    "fingerprint": "551f69b605798fa77b41766bb977ee9a4094bcc3567eea62dc9798320988b455",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/controllers/documentmanage.controller.ts",
+      "lines": {
+        "begin": 29
+      }
+    }
+  },
+  {
+    "description": "Administrative and sensitive API operations lack application authorization \u2014 Require authenticated identities and server-side role or ownership checks at each sensitive operation; deny by default and independently test unauthorized roles.",
+    "check_name": "ADDER authorization",
+    "fingerprint": "6768f0a7472cdb759243114a46cf4e4806d1165a8ecf9cb1b8f6fa668f21539b",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/controllers/documentjob.controller.ts",
+      "lines": {
+        "begin": 66
+      }
+    }
+  },
+  {
+    "description": "Unauthenticated callers can place and activate content used as LLM retrieval context \u2014 Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+    "check_name": "ADDER llm-security",
+    "fingerprint": "20b390caa99574f9f0ee30f6c041ffb7c86a1a9effb7f31ed6f70c3b026f7318",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/routes/uploader.routes.ts",
+      "lines": {
+        "begin": 67
+      }
+    }
+  },
+  {
+    "description": "Unauthenticated callers can place and activate content used as LLM retrieval context \u2014 Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+    "check_name": "ADDER llm-security",
+    "fingerprint": "0933f8101b4d43a6d574b84b84bb373b55afa40bd73901ba43a6812fe684c63a",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/controllers/uploader.controller.ts",
+      "lines": {
+        "begin": 69
+      }
+    }
+  },
+  {
+    "description": "Unauthenticated callers can place and activate content used as LLM retrieval context \u2014 Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+    "check_name": "ADDER llm-security",
+    "fingerprint": "aa95533b617780ab0b2022a10cc46d97623dabba23e215c286a7480b5688705b",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/controllers/documentmanage.controller.ts",
+      "lines": {
+        "begin": 52
+      }
+    }
+  },
+  {
+    "description": "Unauthenticated callers can place and activate content used as LLM retrieval context \u2014 Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+    "check_name": "ADDER llm-security",
+    "fingerprint": "d9be37ac6b68c3e18f558d0442ec80db28801decf83fa904b3140c4d95d4bca1",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/utils/rag.helper.ts",
+      "lines": {
+        "begin": 455
+      }
+    }
+  },
+  {
+    "description": "Unauthenticated callers can place and activate content used as LLM retrieval context \u2014 Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+    "check_name": "ADDER llm-security",
+    "fingerprint": "f19ffc40ab504b4e52531203b49a96eefde9d6af20ed61271618c0c0cfa08bc9",
+    "severity": "critical",
+    "location": {
+      "path": "src/backend/app/utils/prompts.ts",
+      "lines": {
+        "begin": 394
+      }
+    }
+  },
+  {
+    "description": "Provider session tokens can be minted without an application authorization check \u2014 Authenticate the caller, enforce server-side avatar and voice allowlists, apply per-user authorization and rate limits, and avoid returning provider error bodies verbatim.",
+    "check_name": "ADDER authorization",
+    "fingerprint": "324b7dc002357cfd4703bcc3e4361341533865652afbac39c969c5e7d0a17746",
+    "severity": "critical",
+    "location": {
+      "path": "src/frontend/src/app/api/get-heygen-token/route.ts",
+      "lines": {
+        "begin": 6
+      }
+    }
+  },
+  {
+    "description": "Deployment jobs execute unpinned remote code and promote mutable artifacts \u2014 Pin and verify the installer and Python packages, use approved immutable CI images, promote image digests rather than latest tags, and isolate credential acquisition after artifact verification.",
+    "check_name": "ADDER supply-chain",
+    "fingerprint": "fe30cfc98cbdd5adb17600bc2e37de0f9580f07dad722a6ef793d1ee3bfc88f7",
+    "severity": "critical",
+    "location": {
+      "path": ".gitlab-ci.yml",
+      "lines": {
+        "begin": 443
+      }
+    }
+  },
+  {
+    "description": "Deployment jobs execute unpinned remote code and promote mutable artifacts \u2014 Pin and verify the installer and Python packages, use approved immutable CI images, promote image digests rather than latest tags, and isolate credential acquisition after artifact verification.",
+    "check_name": "ADDER supply-chain",
+    "fingerprint": "e164e0ff0b9530c200da95cf780feea116c033c1aa06bf51b4ad49ad0f617fed",
+    "severity": "critical",
+    "location": {
+      "path": ".gitlab-ci.yml",
+      "lines": {
+        "begin": 446
+      }
+    }
+  },
+  {
+    "description": "Deployment jobs execute unpinned remote code and promote mutable artifacts \u2014 Pin and verify the installer and Python packages, use approved immutable CI images, promote image digests rather than latest tags, and isolate credential acquisition after artifact verification.",
+    "check_name": "ADDER supply-chain",
+    "fingerprint": "46e3549be5a5949be35aee75f897a5892e8262d463cf622b60945b1878843787",
+    "severity": "critical",
+    "location": {
+      "path": ".gitlab-ci.yml",
+      "lines": {
+        "begin": 458
+      }
+    }
+  },
+  {
+    "description": "Session and JWT signing configuration accepts static fallback secrets \u2014 Remove fallback literals, require high-entropy managed secrets at startup, fail fast when absent, and rotate any environment that used the fallback.",
+    "check_name": "ADDER secrets",
+    "fingerprint": "7189c868d2a963e8ec8033fefa70e3ad7abb8bda70952cee813fc79c19a5098a",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/routes/index.ts",
+      "lines": {
+        "begin": 50
+      }
+    }
+  },
+  {
+    "description": "Session and JWT signing configuration accepts static fallback secrets \u2014 Remove fallback literals, require high-entropy managed secrets at startup, fail fast when absent, and rotate any environment that used the fallback.",
+    "check_name": "ADDER secrets",
+    "fingerprint": "0a4f309bffddb4c628925eb72907559db3665bc88217d040b59d66fb777447f8",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/utils/jwt.ts",
+      "lines": {
+        "begin": 18
+      }
+    }
+  },
+  {
+    "description": "Retrieved documents and conversational content are written to application logs \u2014 Log identifiers, counts, timing, and redacted metadata instead of content; define classification-aware retention and access controls.",
+    "check_name": "ADDER information-disclosure",
+    "fingerprint": "b4d24be862608dfab94c86efebf2774bfb91fef7ca4b6573a2cbdeacc5eae43f",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/utils/rag.helper.ts",
+      "lines": {
+        "begin": 450
+      }
+    }
+  },
+  {
+    "description": "Retrieved documents and conversational content are written to application logs \u2014 Log identifiers, counts, timing, and redacted metadata instead of content; define classification-aware retention and access controls.",
+    "check_name": "ADDER information-disclosure",
+    "fingerprint": "d0992266e10d73dad422a6f6463a07c54df83c837abfb5dd8080c9c76ff12519",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/utils/rag.helper.ts",
+      "lines": {
+        "begin": 468
+      }
+    }
+  },
+  {
+    "description": "Retrieved documents and conversational content are written to application logs \u2014 Log identifiers, counts, timing, and redacted metadata instead of content; define classification-aware retention and access controls.",
+    "check_name": "ADDER information-disclosure",
+    "fingerprint": "fbe7e68c7f17c47f6fac8076adf8d3e86ae95d758c920a0ffc0f418e2c939e86",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/controllers/retriever.controller.ts",
+      "lines": {
+        "begin": 65
+      }
+    }
+  },
+  {
+    "description": "Retrieved documents and conversational content are written to application logs \u2014 Log identifiers, counts, timing, and redacted metadata instead of content; define classification-aware retention and access controls.",
+    "check_name": "ADDER information-disclosure",
+    "fingerprint": "5d9a90dbf57471fa6f1eef43f51784cc4b111d9c8ce17c911e1e01723aa1aa87",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/app/controllers/retriever.controller.ts",
+      "lines": {
+        "begin": 133
+      }
+    }
+  },
+  {
+    "description": "Tier 3 security behaviors have no executable behavior-level test evidence \u2014 Add a deterministic test command and behavior-level negative, role, corpus-promotion, provider-token, logging, and regression tests with durable outcome assertions.",
+    "check_name": "ADDER test-evidence",
+    "fingerprint": "d2e659eba541eeb3a3536ffea133410b1096a11ea31dbc8ba2d87486f6734a85",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/package.json",
+      "lines": {
+        "begin": 6
+      }
+    }
+  },
+  {
+    "description": "Tier 3 security behaviors have no executable behavior-level test evidence \u2014 Add a deterministic test command and behavior-level negative, role, corpus-promotion, provider-token, logging, and regression tests with durable outcome assertions.",
+    "check_name": "ADDER test-evidence",
+    "fingerprint": "2113a0df0ec4f2689ad82bf969908bb40fb9678c6971a48cd261ef7bf5ec7d5b",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/test/api.test.js",
+      "lines": {
+        "begin": 3
+      }
+    }
+  },
+  {
+    "description": "Tier 3 security behaviors have no executable behavior-level test evidence \u2014 Add a deterministic test command and behavior-level negative, role, corpus-promotion, provider-token, logging, and regression tests with durable outcome assertions.",
+    "check_name": "ADDER test-evidence",
+    "fingerprint": "02a87814c45ddae20d0ae57e09da8c3f793c9f97582cff18a3e39ce931ce9745",
+    "severity": "major",
+    "location": {
+      "path": "src/backend/test/app.test.js",
+      "lines": {
+        "begin": 6
+      }
+    }
+  }
+]

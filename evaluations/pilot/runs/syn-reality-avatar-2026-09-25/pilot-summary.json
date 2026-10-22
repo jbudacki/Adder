@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "observation_count": 1,
+  "repository_type_counts": {
+    "ai_agent": 1,
+    "enterprise_application": 0,
+    "infrastructure": 0
+  },
+  "provenance_coverage": 0.0,
+  "scenario_detection_rate": null,
+  "false_positive_rate": null,
+  "risky_change_block_recommendation_rate": null,
+  "average_review_minutes": null,
+  "average_human_review_minutes": null,
+  "average_remediation_minutes": null,
+  "average_recovery_minutes": null,
+  "reusable_controls_created": 1,
+  "totals": {
+    "seeded_or_validated_scenarios": null,
+    "confirmed_scenarios_detected": null,
+    "findings_reviewed": null,
+    "false_positives": null,
+    "risky_changes": null,
+    "risky_changes_block_recommended": null
+  }
+}

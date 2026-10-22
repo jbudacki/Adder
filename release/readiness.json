@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "decision_id": "ADDER-RELEASE-2026-09-25",
+  "toolkit_version": "0.1.0-pre-pilot.1",
+  "decision": "pilot_only",
+  "criteria": [
+    {"criterion_id": "foundation", "description": "Foundation contracts and deterministic validation are present", "status": "met", "evidence": ["scripts/validate_skills.py", "schemas/"]},
+    {"criterion_id": "standalone-skills", "description": "The standalone ADDER skill portfolio is present", "status": "met", "evidence": ["skills/CATALOG.md", "scripts/validate_skills.py"]},
+    {"criterion_id": "agent-boundaries", "description": "Agent authority and recovery boundaries are documented and tested", "status": "met", "evidence": ["skills/adder-agent-boundary/", "scripts/validate_agent_recovery_fixtures.py"]},
+    {"criterion_id": "advisory-gitlab", "description": "Advisory GitLab artifacts can be generated locally", "status": "met", "evidence": ["evaluations/pilot/runs/syn-reality-avatar-2026-09-25/adder-report.md", "evaluations/pilot/runs/syn-reality-avatar-2026-09-25/gl-code-quality-report.json"]},
+    {"criterion_id": "representative-cohort", "description": "The planned three-repository operational cohort is complete", "status": "not_met", "evidence": ["evaluations/pilot/runs/"]},
+    {"criterion_id": "human-metrics", "description": "Human-validated accuracy and operational metrics are available", "status": "not_met", "evidence": ["evaluations/pilot/runs/syn-reality-avatar-2026-09-25/pilot-summary.json"]},
+    {"criterion_id": "provenance", "description": "AI-assistance provenance has been demonstrated with approved evidence", "status": "not_met", "evidence": []},
+    {"criterion_id": "package-trust", "description": "Package trust checks use approved authoritative sources", "status": "not_met", "evidence": []},
+    {"criterion_id": "recovery-exercise", "description": "Remediation and recovery have been exercised on a real repository", "status": "not_met", "evidence": []},
+    {"criterion_id": "ownership", "description": "Operational and control owners are assigned", "status": "not_met", "evidence": ["docs/operational-ownership.md"]},
+    {"criterion_id": "exceptions-support", "description": "Exception and support procedures are approved", "status": "not_met", "evidence": ["docs/operational-ownership.md"]},
+    {"criterion_id": "license-distribution", "description": "License and redistribution terms are approved", "status": "not_met", "evidence": []},
+    {"criterion_id": "compatibility-breadth", "description": "Target runner and platform compatibility is verified", "status": "not_met", "evidence": ["docs/compatibility.md"]},
+    {"criterion_id": "release-integrity", "description": "Version signing and release integrity are approved", "status": "not_met", "evidence": []},
+    {"criterion_id": "enforcement-approval", "description": "AppSec and Delivery Enablement approve blocking controls", "status": "not_met", "evidence": []}
+  ],
+  "blocking_conditions": [
+    "Complete the representative operational cohort",
+    "Record human adjudication and accuracy metrics",
+    "Assign operational, policy, exception, support, and release owners",
+    "Exercise real remediation and recovery",
+    "Approve licensing, distribution, compatibility, and release-integrity controls",
+    "Obtain explicit approval before any mandatory enforcement"
+  ],
+  "allowed_use": [
+    "Local synthetic evaluation",
+    "Explicitly approved read-only repository pilots",
+    "Advisory findings with human review",
+    "Development and validation of candidate controls"
+  ],
+  "prohibited_use": [
+    "Mandatory merge, build, deployment, or release enforcement",
+    "Autonomous code changes, merges, deployments, or exception approvals",
+    "Enterprise-wide assurance or complete provenance claims",
+    "External redistribution before licensing and release approval"
+  ],
+  "decision_owner": null,
+  "approval_references": [],
+  "generated_at": "2026-09-25T00:00:00Z",
+  "review_by": "2026-10-25",
+  "limitations": [
+    "One of three planned operational repositories has been assessed",
+    "Human validation metrics are unavailable",
+    "Only the local macOS and Python environment has been exercised",
+    "No live GitLab pipeline was run"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "repository_type": "enterprise_application",
+  "risk_tier": 3,
+  "required_skills": [
+    "adder-secure-code-review",
+    "adder-test-evidence"
+  ],
+  "expected_findings": [
+    "object-level authorization check removed",
+    "negative authorization regression test removed"
+  ],
+  "evidence_requirements": [
+    "caller-controlled invoice selection",
+    "authenticated user identity source",
+    "removed ownership comparison",
+    "reachable invoice data",
+    "negative test removal"
+  ]
+}
+

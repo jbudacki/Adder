@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/release-readiness.schema.json",
+  "title": "ADDER Release Readiness Decision",
+  "description": "Evidence-backed decision for pilot, advisory, or mandatory ADDER use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "toolkit_version",
+    "decision",
+    "criteria",
+    "blocking_conditions",
+    "allowed_use",
+    "prohibited_use",
+    "decision_owner",
+    "generated_at",
+    "review_by"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "decision_id": { "type": "string", "minLength": 1 },
+    "toolkit_version": { "type": "string", "minLength": 1 },
+    "decision": { "enum": ["not_ready", "pilot_only", "advisory_ready", "mandatory_ready"] },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion_id", "description", "status", "evidence"],
+        "properties": {
+          "criterion_id": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["met", "not_met", "unknown", "not_applicable"] },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "blocking_conditions": { "type": "array", "items": { "type": "string" } },
+    "allowed_use": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "prohibited_use": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "decision_owner": { "type": ["string", "null"] },
+    "approval_references": { "type": "array", "items": { "type": "string" } },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "review_by": { "type": "string", "format": "date" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

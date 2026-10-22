@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "repository": "syn-reality-avatar-main",
+  "commit": "unavailable-source-snapshot",
+  "risk_tier": 3,
+  "rationales": [
+    {
+      "signal": "Authentication, authorization, sessions, and administrative operations",
+      "evidence": "The application implements login and sessions while mounting reporting, upload, document-management, and generation routes.",
+      "location": "src/backend/app/routes/index.ts:45"
+    },
+    {
+      "signal": "LLM, RAG, embeddings, and externally supplied corpus content",
+      "evidence": "Uploaded documents can be embedded, activated, retrieved, and inserted into LLM context.",
+      "location": "src/backend/app/controllers/retriever.controller.ts:67"
+    },
+    {
+      "signal": "CI/CD production authority and artifact supply chain",
+      "evidence": "Deployment jobs obtain cloud credentials, promote mutable image tags, and execute remotely retrieved scripts.",
+      "location": ".gitlab-ci.yml:446"
+    },
+    {
+      "signal": "Third-party service session-token issuance",
+      "evidence": "A server-side API route uses a provider key to mint and return external session tokens.",
+      "location": "src/frontend/src/app/api/get-heygen-token/route.ts:24"
+    }
+  ],
+  "required_treatment": [
+    "ADDER secure-code, secrets, LLM, dependency, package-trust, test-evidence, and threat-model review",
+    "Independent security testing in an authorized isolated environment",
+    "Human application-security and service-owner approval",
+    "No autonomous merge or production deployment"
+  ],
+  "affected_trust_boundaries": [
+    "Internet or client to backend API",
+    "Uploaded content to vector store and LLM context",
+    "Application to model and avatar providers",
+    "CI runner to remote download source and cloud deployment accounts",
+    "Application and model data to operational logs"
+  ],
+  "unknowns": [
+    "Upstream gateway authentication and network restrictions",
+    "Production environment-variable completeness",
+    "Approved registry and package-intelligence policy",
+    "Current deployed revision and runtime configuration"
+  ],
+  "needs_confirmation": true
+}

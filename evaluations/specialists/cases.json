@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "id": "route-cross-cutting-code-review",
+      "skill": "adder-security-review",
+      "input_summary": "A request handler passes a user-controlled path to a file operation.",
+      "expected": {
+        "action": "route",
+        "required_skills": ["adder-secure-code-review"],
+        "evidence_requirements": ["entry point", "source-to-sink path", "trust boundary", "preconditions"]
+      }
+    },
+    {
+      "id": "validate-reachable-command-path",
+      "skill": "adder-secure-code-review",
+      "input_summary": "A lower-trust request parameter reaches a shell command after incomplete validation.",
+      "expected": {
+        "action": "finding_if_reachable",
+        "required_skills": [],
+        "evidence_requirements": ["caller", "validation", "reachable sink", "deployment constraints"]
+      }
+    },
+    {
+      "id": "secret-candidate-redaction",
+      "skill": "adder-secrets-analysis",
+      "input_summary": "A source file contains a syntactically valid cloud credential identifier.",
+      "expected": {
+        "action": "candidate",
+        "required_skills": [],
+        "evidence_requirements": ["redacted fingerprint", "path and line", "credential consumer", "exposure context"]
+      }
+    },
+    {
+      "id": "iam-wildcard-allow",
+      "skill": "adder-iam-security",
+      "input_summary": "A workload role adds Allow Action star and Resource star without conditions.",
+      "expected": {
+        "action": "finding_if_effective",
+        "required_skills": [],
+        "evidence_requirements": ["principal", "effect", "action", "resource", "conditions", "effective controls"]
+      }
+    },
+    {
+      "id": "public-management-port",
+      "skill": "adder-network-exposure",
+      "input_summary": "A security group adds TCP 22 from both IPv4 and IPv6 internet ranges.",
+      "expected": {
+        "action": "finding_if_attached",
+        "required_skills": [],
+        "evidence_requirements": ["source", "destination", "route", "resource attachment", "compensating controls"]
+      }
+    },
+    {
+      "id": "md5-checksum-context",
+      "skill": "adder-crypto-analysis",
+      "input_summary": "MD5 appears in code that labels the result as a non-adversarial cache checksum.",
+      "expected": {
+        "action": "candidate_not_finding_without_security_property",
+        "required_skills": [],
+        "evidence_requirements": ["cryptographic purpose", "attacker influence", "protected asset", "runtime path"]
+      }
+    },
+    {
+      "id": "model-output-tool-authority",
+      "skill": "adder-llm-security",
+      "input_summary": "Retrieved text can influence model-generated arguments for an external publishing tool.",
+      "expected": {
+        "action": "finding_if_unmediated",
+        "required_skills": ["adder-threat-model"],
+        "evidence_requirements": ["lower-trust source", "tool sink", "effective identity", "approval gate", "argument validation"]
+      }
+    },
+    {
+      "id": "manifest-without-lockfile",
+      "skill": "adder-3pp-dependency-hygiene",
+      "input_summary": "A production package manifest adds a dependency but no applicable lockfile changes.",
+      "expected": {
+        "action": "finding_if_lock_required",
+        "required_skills": [],
+        "evidence_requirements": ["changed manifest lines", "lockfile policy", "diff file inventory", "dependency scope"]
+      }
+    },
+    {
+      "id": "exact-package-integrity-mismatch",
+      "skill": "adder-package-trust",
+      "input_summary": "The resolved production artifact differs from the approved registry digest for the exact package version.",
+      "expected": {
+        "action": "finding_and_block_recommended_if_policy_requires",
+        "required_skills": ["adder-3pp-dependency-hygiene"],
+        "evidence_requirements": ["exact package coordinate", "approved registry", "authoritative digest", "resolved artifact digest", "observation time"]
+      }
+    },
+    {
+      "id": "authorization-happy-path-only",
+      "skill": "adder-test-evidence",
+      "input_summary": "An authorization change has only a successful owner-access test with no denied-role or durable-state assertion.",
+      "expected": {
+        "action": "insufficient",
+        "required_skills": ["adder-secure-code-review"],
+        "evidence_requirements": ["security behavior", "actor and role", "negative case", "assertion target", "test execution status"]
+      }
+    },
+    {
+      "id": "agentic-maestro-model",
+      "skill": "adder-threat-model",
+      "input_summary": "An LLM agent uses persistent memory, RAG, MCP tools, and an external messaging action.",
+      "expected": {
+        "action": "maestro",
+        "required_skills": [],
+        "evidence_requirements": ["components", "assets", "identities", "control plane", "data plane", "trust boundaries"]
+      }
+    }
+  ]
+}

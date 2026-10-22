@@ -1,0 +1,22 @@
+{
+  "repository_type": "ai_agent",
+  "risk_tier": 3,
+  "required_skills": [
+    "adder-llm-security",
+    "adder-agent-boundary",
+    "adder-threat-model"
+  ],
+  "expected_findings": [
+    "model output controls tool selection without an allowlist",
+    "human confirmation gate removed"
+  ],
+  "evidence_requirements": [
+    "model-output source",
+    "tool dispatcher",
+    "effective tool identity",
+    "external side effects",
+    "argument validation",
+    "approval enforcement"
+  ]
+}
+

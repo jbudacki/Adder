@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "test-evidence-syn-reality-avatar-20260925",
+  "subject": {
+    "repository": "syn-reality-avatar-main",
+    "commit": "unavailable-source-snapshot"
+  },
+  "risk_tier": 3,
+  "behavior_claims": [
+    {
+      "behavior_id": "authentication-and-administration",
+      "claim": "Only authenticated and authorized users can read reports or modify document and job state.",
+      "control_location": "src/backend/app/routes/index.ts:61",
+      "coverage": [],
+      "assertion_strength": "none",
+      "baseline_discrimination": "not_demonstrated",
+      "status": "insufficient",
+      "gaps": [
+        "No unauthorized-role or unauthenticated tests",
+        "No durable-state assertions for document activation, deletion, or job completion"
+      ]
+    },
+    {
+      "behavior_id": "rag-corpus-integrity",
+      "claim": "Only approved content can become active retrieval context for model responses.",
+      "control_location": "src/backend/app/utils/rag.helper.ts:455",
+      "coverage": [],
+      "assertion_strength": "none",
+      "baseline_discrimination": "not_demonstrated",
+      "status": "insufficient",
+      "gaps": [
+        "No corpus-write authorization or activation tests",
+        "No retrieval-poisoning or instruction/data separation tests"
+      ]
+    },
+    {
+      "behavior_id": "external-session-token-issuance",
+      "claim": "Only authorized users can consume the server-held provider credential to mint avatar sessions.",
+      "control_location": "src/frontend/src/app/api/get-heygen-token/route.ts:6",
+      "coverage": [],
+      "assertion_strength": "none",
+      "baseline_discrimination": "not_demonstrated",
+      "status": "insufficient",
+      "gaps": [
+        "No authentication, authorization, quota, or abuse tests were found"
+      ]
+    }
+  ],
+  "execution_status": "not_run",
+  "independence_status": "unknown",
+  "status": "insufficient",
+  "finding_ids": ["ADDER-TEST-001"],
+  "required_actions": [
+    "Create behavior-level positive and negative security tests for authentication, administration, RAG corpus integrity, and provider-token issuance.",
+    "Add a deterministic test script and repair the stale backend test import before relying on CI evidence."
+  ],
+  "checks_not_performed": [
+    "Test execution: no package defines a test script, dependencies were not installed, and the existing backend tests import a path absent from the snapshot."
+  ],
+  "limitations": [
+    "This is a static snapshot assessment without a comparison baseline or CI execution record."
+  ]
+}

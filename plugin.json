@@ -1,0 +1,15 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "adder-ai-code-assurance",
+  "version": "0.1.0-pre-pilot.1",
+  "description": "Pre-pilot AI-assisted code assurance workflows for evidence-based review, risk evaluation, remediation, and release decisions.",
+  "author": {
+    "name": "ADDER Project"
+  },
+  "keywords": [
+    "application-security",
+    "ai-assisted-development",
+    "code-review",
+    "software-assurance"
+  ]
+}

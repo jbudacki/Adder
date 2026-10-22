@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "id": "package-exact-artifact-verified",
+      "skill": "adder-package-trust",
+      "input_summary": "An exact production package version resolves from an approved registry with verified publisher, registry digest, consistent lockfile, and completed current intelligence checks.",
+      "evidence": {
+        "approved_registry": "yes",
+        "exact_version": "exists",
+        "publisher_status": "verified",
+        "integrity_status": "verified",
+        "lockfile_consistency": "consistent",
+        "vulnerability_status": "no_applicable_signal",
+        "malware_status": "no_signal",
+        "reputation_status": "acceptable",
+        "sources_current": true
+      },
+      "expected": {
+        "status": "verified",
+        "required_skills": ["adder-3pp-dependency-hygiene"],
+        "reason": "All policy-required evidence is attributable to the exact package version and artifact."
+      }
+    },
+    {
+      "id": "package-integrity-mismatch",
+      "skill": "adder-package-trust",
+      "input_summary": "The resolved artifact digest differs from the approved registry digest for the exact package version.",
+      "evidence": {
+        "approved_registry": "yes",
+        "exact_version": "exists",
+        "publisher_status": "verified",
+        "integrity_status": "mismatch",
+        "lockfile_consistency": "inconsistent",
+        "vulnerability_status": "unknown",
+        "malware_status": "unknown",
+        "reputation_status": "unknown",
+        "sources_current": true
+      },
+      "expected": {
+        "status": "block_recommended",
+        "required_skills": ["adder-3pp-dependency-hygiene"],
+        "reason": "An exact attributable integrity mismatch satisfies a blocking candidate."
+      }
+    },
+    {
+      "id": "package-name-similarity-only",
+      "skill": "adder-package-trust",
+      "input_summary": "A new package name resembles a popular dependency, but publisher, version, artifact, and intelligence evidence are unavailable.",
+      "evidence": {
+        "approved_registry": "unknown",
+        "exact_version": "unknown",
+        "publisher_status": "unknown",
+        "integrity_status": "unknown",
+        "lockfile_consistency": "unknown",
+        "vulnerability_status": "unavailable",
+        "malware_status": "unavailable",
+        "reputation_status": "concern",
+        "sources_current": false
+      },
+      "expected": {
+        "status": "manual_review",
+        "required_skills": ["adder-3pp-dependency-hygiene"],
+        "reason": "Name similarity is a review signal, not proof of hallucination, typosquatting, or malware."
+      }
+    },
+    {
+      "id": "test-authorization-regression-sufficient",
+      "skill": "adder-test-evidence",
+      "input_summary": "An authorization fix has independently derived positive, cross-tenant negative, boundary, and old-code-fail/new-code-pass regression tests with durable-state assertions.",
+      "evidence": {
+        "coverage_kinds": ["positive", "negative", "boundary", "regression"],
+        "assertion_strength": "strong",
+        "execution_status": "passed",
+        "independence_status": "independent",
+        "baseline_discrimination": "old_fails_new_passes"
+      },
+      "expected": {
+        "status": "sufficient",
+        "required_skills": ["adder-secure-code-review"],
+        "reason": "Tests demonstrate the security outcome and discriminate the corrected behavior from the vulnerable baseline."
+      }
+    },
+    {
+      "id": "test-happy-path-only",
+      "skill": "adder-test-evidence",
+      "input_summary": "An object-level authorization change has only a successful owner-access test asserting HTTP 200.",
+      "evidence": {
+        "coverage_kinds": ["positive"],
+        "assertion_strength": "weak",
+        "execution_status": "passed",
+        "independence_status": "unknown",
+        "baseline_discrimination": "not_demonstrated"
+      },
+      "expected": {
+        "status": "insufficient",
+        "required_skills": ["adder-secure-code-review"],
+        "reason": "A passing happy path does not prove unauthorized access is denied or state remains protected."
+      }
+    },
+    {
+      "id": "test-command-unavailable",
+      "skill": "adder-test-evidence",
+      "input_summary": "The security behavior is identifiable, but the test helper and CI execution record are unavailable and the repository command cannot be safely established.",
+      "evidence": {
+        "coverage_kinds": [],
+        "assertion_strength": "unknown",
+        "execution_status": "unavailable",
+        "independence_status": "unknown",
+        "baseline_discrimination": "unknown"
+      },
+      "expected": {
+        "status": "manual_review",
+        "required_skills": ["adder-secure-code-review"],
+        "reason": "Unavailable test and execution evidence cannot be converted into sufficient assurance."
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "id": "tier-1-pass-documentation",
+      "summary": "A declared AI-assisted documentation-only change with consistent repository metadata.",
+      "input": {
+        "changed_surfaces": ["docs/usage.md"],
+        "behavior_change": false,
+        "provenance_status": "verified",
+        "findings": [],
+        "required_checks_complete": true,
+        "required_approvals_present": true
+      },
+      "expected": {
+        "risk_tier": 1,
+        "outcome": "pass",
+        "must_include_reasons": ["documentation-only", "required evidence complete"]
+      }
+    },
+    {
+      "id": "tier-2-warning-application-logic",
+      "summary": "Internal application logic has verified provenance and a validated non-blocking medium finding.",
+      "input": {
+        "changed_surfaces": ["src/reporting/filter.py", "tests/test_filter.py"],
+        "behavior_change": true,
+        "provenance_status": "partially_verified",
+        "findings": [
+          { "severity": "medium", "status": "validated", "blocking_policy_match": false }
+        ],
+        "required_checks_complete": true,
+        "required_approvals_present": true
+      },
+      "expected": {
+        "risk_tier": 2,
+        "outcome": "warning",
+        "must_include_reasons": ["runtime behavior", "non-blocking validated finding"]
+      }
+    },
+    {
+      "id": "tier-3-manual-review-authz",
+      "summary": "An authorization change lacks agent-run metadata and the Phase 3 IAM specialist is unavailable.",
+      "input": {
+        "changed_surfaces": ["src/auth/authorize.ts"],
+        "behavior_change": true,
+        "provenance_status": "unverifiable",
+        "findings": [],
+        "required_checks_complete": false,
+        "checks_not_performed": ["adder-iam-security"],
+        "required_approvals_present": true
+      },
+      "expected": {
+        "risk_tier": 3,
+        "outcome": "manual_review",
+        "must_include_reasons": ["authorization", "required specialist check unavailable", "provenance unverifiable"]
+      }
+    },
+    {
+      "id": "tier-3-block-exposed-secret",
+      "summary": "A CI workflow change contains a validated exposed credential and lacks the required Tier 3 approval.",
+      "input": {
+        "changed_surfaces": [".gitlab-ci.yml"],
+        "behavior_change": true,
+        "provenance_status": "inconsistent",
+        "findings": [
+          { "severity": "critical", "status": "validated", "blocking_policy_match": true, "category": "exposed-credential" }
+        ],
+        "required_checks_complete": true,
+        "required_approvals_present": false
+      },
+      "expected": {
+        "risk_tier": 3,
+        "outcome": "block_recommended",
+        "must_include_reasons": ["validated exposed credential", "required Tier 3 approval missing"]
+      }
+    }
+  ]
+}
+

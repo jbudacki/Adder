@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "id": "repeated-human-validated-auth-finding",
+      "evidence_scope": "multiple_repositories",
+      "validation_status": "human_validated",
+      "requested_state": "advisory",
+      "prerequisites": {"owner": true, "positive_fixture": true, "negative_fixture": true, "ambiguous_fixture": true, "rollback_fixture": true},
+      "expected_state": "advisory",
+      "reason": "Repeated validated evidence with complete fixtures may advance to human-approved advisory use."
+    },
+    {
+      "id": "single-agent-validated-operational-finding",
+      "evidence_scope": "single_repository",
+      "validation_status": "agent_validated",
+      "requested_state": "advisory",
+      "prerequisites": {"owner": false, "positive_fixture": true, "negative_fixture": false, "ambiguous_fixture": false, "rollback_fixture": false},
+      "expected_state": "candidate",
+      "reason": "One agent-reviewed repository cannot justify promotion."
+    },
+    {
+      "id": "material-false-positive",
+      "evidence_scope": "multiple_repositories",
+      "validation_status": "human_validated",
+      "requested_state": "mandatory",
+      "material_false_positive": true,
+      "prerequisites": {"owner": true, "positive_fixture": true, "negative_fixture": true, "ambiguous_fixture": true, "rollback_fixture": true},
+      "expected_state": "evaluating",
+      "reason": "A material false positive requires tuning and a regression fixture before promotion."
+    },
+    {
+      "id": "incomplete-pilot-requests-mandatory",
+      "evidence_scope": "single_repository",
+      "validation_status": "human_validated",
+      "requested_state": "mandatory",
+      "prerequisites": {"owner": true, "positive_fixture": true, "negative_fixture": true, "ambiguous_fixture": true, "rollback_fixture": true, "representative_cohort": false, "enforcement_approval": false},
+      "expected_state": "advisory",
+      "expected_release_decision": "pilot_only",
+      "reason": "Incomplete cohort and missing approval prohibit mandatory enforcement."
+    },
+    {
+      "id": "verified-remediation-and-recovery",
+      "evidence_scope": "single_repository",
+      "validation_status": "human_validated",
+      "requested_state": "advisory",
+      "prerequisites": {"owner": false, "positive_fixture": true, "negative_fixture": true, "ambiguous_fixture": false, "rollback_fixture": true},
+      "expected_state": "candidate",
+      "reason": "A useful recovery pattern remains a candidate until it has an owner and broader validation."
+    },
+    {
+      "id": "contradictory-or-stale-evidence",
+      "evidence_scope": "multiple_repositories",
+      "validation_status": "unresolved",
+      "requested_state": "advisory",
+      "prerequisites": {"owner": true, "positive_fixture": true, "negative_fixture": true, "ambiguous_fixture": true, "rollback_fixture": true},
+      "expected_state": "rejected",
+      "reason": "Contradictory evidence must be resolved by a human before reuse."
+    }
+  ]
+}

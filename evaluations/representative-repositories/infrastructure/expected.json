@@ -1,0 +1,22 @@
+{
+  "repository_type": "infrastructure",
+  "risk_tier": 3,
+  "required_skills": [
+    "adder-network-exposure",
+    "adder-iam-security",
+    "adder-threat-model"
+  ],
+  "expected_findings": [
+    "management port exposed to IPv4 and IPv6 internet ranges",
+    "workload policy grants unrestricted actions and resources"
+  ],
+  "evidence_requirements": [
+    "security group attachment",
+    "effective routes",
+    "source ranges",
+    "IAM principal",
+    "policy effect",
+    "permission boundaries and SCPs"
+  ]
+}
+

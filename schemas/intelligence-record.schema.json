@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/intelligence-record.schema.json",
+  "title": "ADDER Intelligence Record",
+  "description": "A traceable lesson and candidate control derived from validated ADDER evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "source_evidence",
+    "validation_status",
+    "root_cause",
+    "proposed_control",
+    "applicability",
+    "validation_cases",
+    "lifecycle_status",
+    "owner",
+    "promotion_blockers",
+    "rollback_trigger",
+    "created_at",
+    "review_by"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "record_id": { "type": "string", "minLength": 1 },
+    "source_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assessment_id", "evidence_type", "reference"],
+        "properties": {
+          "assessment_id": { "type": "string", "minLength": 1 },
+          "finding_id": { "type": "string" },
+          "evidence_type": { "enum": ["validated_finding", "false_positive", "miss", "remediation", "recovery", "pilot_observation", "operational_feedback"] },
+          "reference": { "type": "string", "minLength": 1 },
+          "human_validator": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "validation_status": { "enum": ["agent_validated", "human_validated", "independently_verified", "unresolved"] },
+    "root_cause": { "type": "string", "minLength": 1 },
+    "proposed_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["control_type", "name", "description", "version"],
+      "properties": {
+        "control_type": { "enum": ["policy", "skill_rule", "scanner_rule", "test_fixture", "ci_advisory", "ci_mandatory", "training", "retirement"] },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "technologies", "exclusions"],
+      "properties": {
+        "scope": { "type": "string", "minLength": 1 },
+        "technologies": { "type": "array", "items": { "type": "string" } },
+        "exclusions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "expected_benefit": { "type": "string" },
+    "false_positive_risk": { "enum": ["low", "medium", "high", "unknown"] },
+    "validation_cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_type", "reference", "result"],
+        "properties": {
+          "case_type": { "enum": ["positive", "negative", "ambiguous", "rollback"] },
+          "reference": { "type": "string", "minLength": 1 },
+          "result": { "enum": ["pass", "fail", "not_run", "unavailable"] }
+        }
+      }
+    },
+    "lifecycle_status": { "enum": ["candidate", "evaluating", "advisory", "mandatory", "rejected", "retired"] },
+    "owner": { "type": ["string", "null"] },
+    "approval_references": { "type": "array", "items": { "type": "string" } },
+    "promotion_blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback_trigger": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "review_by": { "type": "string", "format": "date" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

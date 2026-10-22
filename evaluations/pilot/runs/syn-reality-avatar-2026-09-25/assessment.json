@@ -1,0 +1,341 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "pilot-syn-reality-avatar-20260925",
+  "subject": {
+    "repository": "syn-reality-avatar-main",
+    "commit": "unavailable-source-snapshot"
+  },
+  "risk_tier": 3,
+  "risk_rationale": [
+    "The snapshot contains authentication, session, administrative, LLM/RAG, external-token, CI/CD, and production-deployment authority surfaces.",
+    "Missing Git and deployment context prevents change-level attribution and requires conservative treatment."
+  ],
+  "outcome": "block_recommended",
+  "provenance": {
+    "schema_version": "1.0.0",
+    "verification_status": "unverifiable",
+    "repository": "syn-reality-avatar-main",
+    "commit": "unavailable-source-snapshot",
+    "human_owner": null,
+    "material_ai_assistance": "unknown",
+    "execution_environment": "Read-only local source snapshot",
+    "changed_artifacts": [],
+    "agent_permissions": [
+      "Read-only inspection; no target writes or external validation"
+    ],
+    "evidence_sources": [
+      "User-supplied local source snapshot",
+      "Filesystem inventory"
+    ],
+    "inconsistencies": [],
+    "limitations": [
+      "The supplied directory has no .git metadata, owner declaration, merge request, AI-assistance record, or attestation."
+    ]
+  },
+  "findings": [
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-AUTH-001",
+      "title": "Administrative and sensitive API operations lack application authorization",
+      "category": "authorization",
+      "severity": "high",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/backend/app/routes/index.ts", "line": 61 },
+        { "path": "src/backend/app/controllers/report.controller.ts", "line": 15 },
+        { "path": "src/backend/app/controllers/documentmanage.controller.ts", "line": 29 },
+        { "path": "src/backend/app/controllers/documentjob.controller.ts", "line": 66 }
+      ],
+      "entry_point": "HTTP requests to mounted /v1 reporting, upload, document-management, document-job, session, and generation route groups",
+      "source_to_sink": "Routes are mounted without authentication or role middleware; handlers return conversation history or change vector-store and document-job state.",
+      "trust_boundary": "Unauthenticated client to application data and administrative operations",
+      "preconditions": [
+        "The backend is reachable and no upstream gateway independently enforces equivalent authentication and authorization."
+      ],
+      "evidence": [
+        {
+          "source": "Static route and controller review",
+          "summary": "Eleven /v1 route groups are mounted after session setup with no authentication or authorization middleware; sensitive handlers perform reads and state changes.",
+          "reference": "src/backend/app/routes/index.ts:61"
+        }
+      ],
+      "impact": "An unauthenticated caller can potentially read conversation records and manipulate uploaded knowledge, document state, or administrative jobs.",
+      "exploitability": "Direct at the application layer when reachable; upstream identity enforcement was not supplied and must be confirmed.",
+      "false_positive_considerations": "A separately configured API gateway could reduce external reachability, but no repository evidence demonstrates that control or per-operation authorization.",
+      "recommendation": "Require authenticated identities and server-side role or ownership checks at each sensitive operation; deny by default and independently test unauthorized roles.",
+      "verification": [
+        "Static call-path review from route mounting to reporting and document mutation handlers",
+        "Confirm gateway configuration, then run authorized negative tests for anonymous, ordinary, and administrative roles"
+      ],
+      "open_questions": [
+        "Is every deployed route protected by an upstream identity-aware gateway?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-LLM-001",
+      "title": "Unauthenticated callers can place and activate content used as LLM retrieval context",
+      "category": "llm-security",
+      "severity": "high",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/backend/app/routes/uploader.routes.ts", "line": 67 },
+        { "path": "src/backend/app/controllers/uploader.controller.ts", "line": 69 },
+        { "path": "src/backend/app/controllers/documentmanage.controller.ts", "line": 52 },
+        { "path": "src/backend/app/utils/rag.helper.ts", "line": 455 },
+        { "path": "src/backend/app/utils/prompts.ts", "line": 394 }
+      ],
+      "entry_point": "Unauthenticated PDF and image-context upload endpoints plus unauthenticated document activation",
+      "source_to_sink": "Caller-controlled content is embedded with caller-selected contentFor metadata, can be activated without authorization, is retrieved from active vector records, and is inserted into the model prompt context.",
+      "trust_boundary": "Untrusted uploaded content to trusted retrieval corpus and model-visible instructions",
+      "preconditions": [
+        "The API is reachable, model and storage credentials are configured, and the caller selects a contentFor value used by an avatar."
+      ],
+      "evidence": [
+        {
+          "source": "Static RAG data-flow review",
+          "summary": "The upload, activation, retrieval, and prompt-formatting path is present without a corpus-write authorization or content-promotion gate.",
+          "reference": "src/backend/app/controllers/uploader.controller.ts:83"
+        }
+      ],
+      "impact": "A caller can poison the active knowledge base and influence model responses shown to users, undermining content integrity and potentially exposing retrieved information through crafted instructions.",
+      "exploitability": "The path is complete in source; successful operation also requires configured external services and database access.",
+      "false_positive_considerations": "Documents default to inactive, but the activation operation is also mounted without application authorization.",
+      "recommendation": "Restrict ingestion and activation to approved roles, separate upload from reviewed promotion, validate corpus provenance and integrity, and treat retrieved text strictly as data with injection-focused evaluations.",
+      "verification": [
+        "In an isolated authorized environment, verify anonymous upload and activation are denied and seeded instruction-like content cannot alter system policy"
+      ],
+      "open_questions": [
+        "Is corpus approval enforced outside the repository?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-TOKEN-001",
+      "title": "Provider session tokens can be minted without an application authorization check",
+      "category": "authorization",
+      "severity": "high",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/frontend/src/app/api/get-heygen-token/route.ts", "line": 6 }
+      ],
+      "entry_point": "POST request to the frontend server API token route",
+      "source_to_sink": "Caller-supplied avatar and voice identifiers are sent using a server-held provider key, and the returned provider session token is relayed to the caller without an authentication, authorization, or quota check.",
+      "trust_boundary": "Unauthenticated web client to privileged third-party provider credential and billable session capability",
+      "preconditions": [
+        "The frontend API route is deployed and reachable and the provider key is configured."
+      ],
+      "evidence": [
+        {
+          "source": "Static API route review",
+          "summary": "The POST handler calls the provider with the server-side key and returns the resulting session token without checking caller identity.",
+          "reference": "src/frontend/src/app/api/get-heygen-token/route.ts:21"
+        }
+      ],
+      "impact": "Unauthorized users can consume provider sessions, incur cost, exhaust quota, or use unapproved avatar and voice combinations.",
+      "exploitability": "Direct when the route is public; no source-level mitigating control was found.",
+      "false_positive_considerations": "An upstream authenticated proxy could limit reachability, but no evidence of that control was supplied.",
+      "recommendation": "Authenticate the caller, enforce server-side avatar and voice allowlists, apply per-user authorization and rate limits, and avoid returning provider error bodies verbatim.",
+      "verification": [
+        "Test that anonymous and unauthorized requests are rejected before any provider call and that quotas are enforced"
+      ],
+      "open_questions": [
+        "Does the deployment platform apply route-level authentication before this handler?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-CICD-001",
+      "title": "Deployment jobs execute unpinned remote code and promote mutable artifacts",
+      "category": "supply-chain",
+      "severity": "high",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": ".gitlab-ci.yml", "line": 443 },
+        { "path": ".gitlab-ci.yml", "line": 446 },
+        { "path": ".gitlab-ci.yml", "line": 458 }
+      ],
+      "entry_point": "Manual production and lower-environment GitLab deployment jobs",
+      "source_to_sink": "Jobs install an unpinned package, pipe a script from a mutable remote branch directly to a shell, and promote images identified by mutable latest tags before obtaining and using deployment credentials.",
+      "trust_boundary": "External package and source hosting to privileged CI runner and cloud deployment control plane",
+      "preconditions": [
+        "A deployment job runs and the remote installer, package resolution, network path, or mutable image tag is compromised or unexpectedly changed."
+      ],
+      "evidence": [
+        {
+          "source": "Static GitLab pipeline review",
+          "summary": "The production deployment path contains direct remote-script execution without digest or signature verification and uses mutable image references.",
+          "reference": ".gitlab-ci.yml:446"
+        }
+      ],
+      "impact": "Compromised upstream content can execute in the deployment job, access CI material, alter downloaded credential files or artifacts, and affect production deployment.",
+      "exploitability": "Requires a deployment run and compromise or substitution of an unpinned input; the production jobs are manual but consequential.",
+      "false_positive_considerations": "HTTPS and manual approval reduce some risk but do not establish content integrity or immutable artifact identity.",
+      "recommendation": "Pin and verify the installer and Python packages, use approved immutable CI images, promote image digests rather than latest tags, and isolate credential acquisition after artifact verification.",
+      "verification": [
+        "Confirm every deployment input resolves to an approved immutable digest or signed artifact and that production deploys the reviewed digest"
+      ],
+      "open_questions": [
+        "Is the remote installer mirrored or integrity-verified by runner controls outside this file?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-SECRET-001",
+      "title": "Session and JWT signing configuration accepts static fallback secrets",
+      "category": "secrets",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/backend/app/routes/index.ts", "line": 50 },
+        { "path": "src/backend/app/utils/jwt.ts", "line": 18 }
+      ],
+      "entry_point": "Application startup without required secret environment variables",
+      "source_to_sink": "Missing environment configuration silently selects repository-visible fallback literals for session and JWT signing.",
+      "trust_boundary": "Deployment configuration to authentication and session integrity controls",
+      "preconditions": [
+        "A deployment omits the applicable secret environment variable."
+      ],
+      "evidence": [
+        {
+          "source": "Static configuration review",
+          "summary": "Both controls use environment values with fixed source-code fallbacks; raw fallback values were not reproduced in the pilot output.",
+          "reference": "src/backend/app/routes/index.ts:50"
+        }
+      ],
+      "impact": "A configuration mistake can make signing material predictable and weaken session or token integrity.",
+      "exploitability": "Depends on the environment variables being absent; the JWT verifier was not found on protected route paths, while the session secret is active.",
+      "false_positive_considerations": "Correctly configured environments avoid the fallback, but the application does not fail closed when configuration is missing.",
+      "recommendation": "Remove fallback literals, require high-entropy managed secrets at startup, fail fast when absent, and rotate any environment that used the fallback.",
+      "verification": [
+        "Start in an isolated environment without each secret and verify startup fails without disclosing secret material"
+      ],
+      "open_questions": [
+        "Were any deployed environments started with the fallback configuration?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-LOG-001",
+      "title": "Retrieved documents and conversational content are written to application logs",
+      "category": "information-disclosure",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/backend/app/utils/rag.helper.ts", "line": 450 },
+        { "path": "src/backend/app/utils/rag.helper.ts", "line": 468 },
+        { "path": "src/backend/app/controllers/retriever.controller.ts", "line": 65 },
+        { "path": "src/backend/app/controllers/retriever.controller.ts", "line": 133 }
+      ],
+      "entry_point": "User questions, chat history, retrieved corpus records, and model responses",
+      "source_to_sink": "Application code logs standalone questions, retrieved document content and metadata, message history, and model answers at info or debug levels.",
+      "trust_boundary": "Application and model data to centralized operational logging",
+      "preconditions": [
+        "The affected paths execute and the configured logger exports or retains the corresponding levels."
+      ],
+      "evidence": [
+        {
+          "source": "Static logging review",
+          "summary": "Retrieved page content is logged at info level and conversational data is logged at multiple points.",
+          "reference": "src/backend/app/utils/rag.helper.ts:468"
+        }
+      ],
+      "impact": "Potentially confidential corpus content, user questions, session context, and model responses can be exposed to log readers and retained beyond application data policy.",
+      "exploitability": "Requires access to logs or a downstream logging service; actual data classification and logger configuration were not supplied.",
+      "false_positive_considerations": "If all content is public and logs are tightly controlled with suitable retention, impact is lower; that evidence was unavailable.",
+      "recommendation": "Log identifiers, counts, timing, and redacted metadata instead of content; define classification-aware retention and access controls.",
+      "verification": [
+        "Exercise representative requests in an isolated environment and confirm logs contain no question, document, session, credential, or model-response content"
+      ],
+      "open_questions": [
+        "What data classification, retention period, and audience apply to production logs?"
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-TEST-001",
+      "title": "Tier 3 security behaviors have no executable behavior-level test evidence",
+      "category": "test-evidence",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        { "path": "src/backend/package.json", "line": 6 },
+        { "path": "src/backend/test/api.test.js", "line": 3 },
+        { "path": "src/backend/test/app.test.js", "line": 6 }
+      ],
+      "entry_point": "Repository test configuration and the only two discovered test files",
+      "source_to_sink": "No package defines a test command; the backend tests import an absent path and cover only welcome and not-found responses, leaving authentication, authorization, ingestion, RAG, provider-token, and CI security claims untested.",
+      "trust_boundary": "Security-sensitive implementation claims to release and approval evidence",
+      "preconditions": [
+        "The supplied snapshot accurately represents the repository test configuration."
+      ],
+      "evidence": [
+        {
+          "source": "Static test-evidence review",
+          "summary": "Only two superficial backend tests were found, their import target is absent, and no test script is defined in any package manifest.",
+          "reference": "src/backend/test/app.test.js:4"
+        }
+      ],
+      "impact": "Security regressions in access control, corpus integrity, external token issuance, and sensitive-data handling can reach review without independent executable evidence.",
+      "exploitability": "This is an assurance gap rather than a direct attack path; it materially reduces confidence in Tier 3 controls.",
+      "false_positive_considerations": "Tests may exist in an external pipeline or omitted repository location, but no such evidence was supplied.",
+      "recommendation": "Add a deterministic test command and behavior-level negative, role, corpus-promotion, provider-token, logging, and regression tests with durable outcome assertions.",
+      "verification": [
+        "Run the approved test command in isolation and demonstrate unauthorized cases fail while authorized cases pass"
+      ],
+      "open_questions": [
+        "Does a separate private test suite cover these behaviors?"
+      ]
+    }
+  ],
+  "checks_performed": [
+    "adder-code-assurance",
+    "adder-provenance-review",
+    "adder-change-risk",
+    "adder-security-review",
+    "adder-secure-code-review",
+    "adder-secrets-analysis redacting scan",
+    "adder-llm-security reconnaissance and source-to-sink review",
+    "adder-3pp-dependency-hygiene offline manifest and lockfile review",
+    "adder-test-evidence static assessment",
+    "adder-threat-model split STRIDE and MAESTRO review",
+    "adder-pr-decision"
+  ],
+  "checks_not_performed": [
+    "Live endpoint validation or exploit testing",
+    "Test execution or build: no test command is defined, the discovered backend tests reference an absent import target, dependencies were not installed, and the target remained read-only",
+    "Authoritative package existence, publisher, vulnerability, malware, maintenance, and reputation checks: no approved registry or intelligence access was supplied",
+    "Git diff and history review: the supplied snapshot contains no .git directory",
+    "Deployment, gateway, runtime, log-platform, cloud-IAM, and production configuration validation"
+  ],
+  "required_actions": [
+    "Add application-layer authentication and operation-specific authorization before reports, document management, ingestion, generation, and administrative job actions.",
+    "Separate RAG ingestion from reviewed activation and add provenance, integrity, and prompt-injection controls.",
+    "Protect provider-token issuance with identity, allowlists, rate limits, and quota controls.",
+    "Replace unpinned CI downloads and mutable image promotion with verified immutable artifacts.",
+    "Remove fallback signing secrets and minimize content logging.",
+    "Add executable behavior-level security tests and rerun ADDER against a Git-backed change with approved package intelligence."
+  ],
+  "required_approvals": [
+    "Application owner",
+    "AppSec Tier 3 reviewer",
+    "AI or model-risk owner",
+    "Delivery Enablement or CI/CD owner",
+    "Data owner for corpus, conversations, and logs"
+  ],
+  "exception_path": "No exception was supplied. Any exception must meet policies/core-decision-policy.md and cannot erase findings.",
+  "limitations": [
+    "Static read-only review of a non-Git source snapshot; no network calls, package installation, credential validation, service startup, or production interaction occurred.",
+    "Reachability and severity assume no equivalent upstream identity or network control; deployment evidence is required to resolve that assumption.",
+    "The two database-string scanner candidates were environment-composed values rather than embedded credentials; raw values and secret material were not persisted in pilot artifacts."
+  ],
+  "generated_at": "2026-09-25T17:40:36Z",
+  "toolkit_version": "0.1.0"
+}

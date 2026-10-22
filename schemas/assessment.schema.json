@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/assessment.schema.json",
+  "title": "ADDER Assessment",
+  "description": "A consolidated ADDER assessment and advisory disposition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "subject",
+    "risk_tier",
+    "outcome",
+    "findings",
+    "required_actions",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "assessment_id": { "type": "string", "minLength": 1 },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "minLength": 1 },
+        "merge_request": { "type": "string" }
+      }
+    },
+    "risk_tier": { "enum": [1, 2, 3] },
+    "risk_rationale": { "type": "array", "items": { "type": "string" } },
+    "outcome": {
+      "enum": ["pass", "warning", "manual_review", "block_recommended"]
+    },
+    "provenance": { "$ref": "provenance.schema.json" },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "finding.schema.json" }
+    },
+    "checks_performed": { "type": "array", "items": { "type": "string" } },
+    "checks_not_performed": { "type": "array", "items": { "type": "string" } },
+    "required_actions": { "type": "array", "items": { "type": "string" } },
+    "required_approvals": { "type": "array", "items": { "type": "string" } },
+    "exception_path": { "type": "string" },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "toolkit_version": { "type": "string" }
+  }
+}
+

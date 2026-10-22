@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/attestation.schema.json",
+  "title": "ADDER Artifact Attestation Reference",
+  "description": "A normalized reference to build or artifact integrity evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_name",
+    "artifact_digest",
+    "predicate_type",
+    "issuer",
+    "verification_status"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "artifact_name": { "type": "string", "minLength": 1 },
+    "artifact_digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "enum": ["sha256", "sha384", "sha512"] },
+        "value": { "type": "string", "minLength": 1 }
+      }
+    },
+    "predicate_type": { "type": "string", "minLength": 1 },
+    "issuer": { "type": "string", "minLength": 1 },
+    "subject_repository": { "type": "string" },
+    "subject_commit": { "type": "string" },
+    "builder": { "type": "string" },
+    "build_id": { "type": "string" },
+    "reference": { "type": "string" },
+    "verification_status": {
+      "enum": ["verified", "failed", "not_verified", "unavailable"]
+    },
+    "verified_at": { "type": "string", "format": "date-time" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}
+

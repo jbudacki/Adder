@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "example-assessment-001",
+  "subject": {
+    "repository": "example/group/project",
+    "commit": "0123456789abcdef",
+    "merge_request": "42"
+  },
+  "risk_tier": 3,
+  "risk_rationale": [
+    "The proposed infrastructure change modifies public network reachability."
+  ],
+  "outcome": "block_recommended",
+  "findings": [
+    {
+      "schema_version": "1.0.0",
+      "finding_id": "ADDER-NET-001",
+      "title": "Management port exposed to the internet",
+      "category": "network-exposure",
+      "severity": "high",
+      "confidence": "high",
+      "status": "validated",
+      "affected_locations": [
+        {
+          "path": "infrastructure/main.tf",
+          "line": 6
+        }
+      ],
+      "entry_point": "Internet source range",
+      "source_to_sink": "0.0.0.0/0 reaches TCP 22 on the attached administrative security group",
+      "trust_boundary": "Internet to administrative interface",
+      "preconditions": [
+        "The security group is attached to a reachable resource"
+      ],
+      "evidence": [
+        {
+          "source": "proposed infrastructure diff",
+          "summary": "The ingress source changed from an internal range to all IPv4 addresses.",
+          "reference": "infrastructure/main.tf:6"
+        }
+      ],
+      "impact": "An administrative service can become reachable from untrusted networks.",
+      "exploitability": "Requires an attached resource, effective route, and listening SSH service.",
+      "false_positive_considerations": "Deployment attachment and route state must be confirmed.",
+      "recommendation": "Restrict access to the approved administrative source or broker.",
+      "verification": [
+        "Inspect the rendered infrastructure plan and effective security-group attachment."
+      ],
+      "owner": "example-infrastructure-owner",
+      "open_questions": []
+    }
+  ],
+  "checks_performed": [
+    "adder-network-exposure"
+  ],
+  "checks_not_performed": [],
+  "required_actions": [
+    "Restore the approved administrative source restriction."
+  ],
+  "required_approvals": [
+    "Infrastructure owner",
+    "AppSec Tier 3 reviewer"
+  ],
+  "limitations": [
+    "This is synthetic example data."
+  ],
+  "generated_at": "2026-09-25T12:00:00Z",
+  "toolkit_version": "0.1.0"
+}
+

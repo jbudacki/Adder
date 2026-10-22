@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://adder.example/schemas/finding.schema.json",
+  "title": "ADDER Finding",
+  "description": "A normalized, evidence-backed ADDER finding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "finding_id",
+    "title",
+    "category",
+    "severity",
+    "confidence",
+    "status",
+    "evidence",
+    "impact",
+    "recommendation"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "finding_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "category": { "type": "string", "minLength": 1 },
+    "severity": {
+      "enum": ["informational", "low", "medium", "high", "critical"]
+    },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "status": {
+      "enum": ["candidate", "validated", "false_positive", "accepted", "remediated"]
+    },
+    "affected_locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "line": { "type": "integer", "minimum": 1 },
+          "artifact": { "type": "string" }
+        }
+      }
+    },
+    "entry_point": { "type": "string" },
+    "source_to_sink": { "type": "string" },
+    "trust_boundary": { "type": "string" },
+    "preconditions": { "type": "array", "items": { "type": "string" } },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "summary"],
+        "properties": {
+          "source": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "reference": { "type": "string" }
+        }
+      }
+    },
+    "impact": { "type": "string", "minLength": 1 },
+    "exploitability": { "type": "string" },
+    "false_positive_considerations": { "type": "string" },
+    "recommendation": { "type": "string", "minLength": 1 },
+    "verification": { "type": "array", "items": { "type": "string" } },
+    "owner": { "type": "string" },
+    "exception_id": { "type": "string" },
+    "open_questions": { "type": "array", "items": { "type": "string" } }
+  }
+}
+

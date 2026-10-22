@@ -1,0 +1,26 @@
+# Advisory pilot template. This job never enforces an ADDER merge decision.
+# Vendor ADDER at .adder or override ADDER_ROOT with its repository-local path.
+
+adder:advisory-report:
+  stage: test
+  allow_failure: true
+  variables:
+    ADDER_ROOT: ".adder"
+    ADDER_ASSESSMENT_PATH: "adder-input-assessment.json"
+  script:
+    - python3 "$ADDER_ROOT/scripts/prepare_advisory_assessment.py" --input "$ADDER_ASSESSMENT_PATH" --output adder-assessment.json
+    - python3 "$ADDER_ROOT/scripts/render_gitlab_report.py" --assessment adder-assessment.json --markdown adder-report.md --codequality gl-code-quality-report.json
+  artifacts:
+    when: always
+    expose_as: "ADDER advisory report"
+    expire_in: "1 week"
+    paths:
+      - adder-report.md
+      - adder-assessment.json
+      - gl-code-quality-report.json
+    reports:
+      codequality: gl-code-quality-report.json
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+

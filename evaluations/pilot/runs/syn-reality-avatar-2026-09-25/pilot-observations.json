@@ -1,0 +1,29 @@
+[
+  {
+    "schema_version": "1.0.0",
+    "observation_id": "pilot-syn-reality-avatar-20260925",
+    "repository_type": "ai_agent",
+    "repository_reference": "Local read-only AI/RAG application snapshot; source path withheld from aggregate reporting",
+    "assessment_id": "pilot-syn-reality-avatar-20260925",
+    "provenance_verifiable": false,
+    "seeded_or_validated_scenarios": null,
+    "confirmed_scenarios_detected": null,
+    "findings_reviewed": null,
+    "false_positives": null,
+    "review_minutes": null,
+    "human_review_minutes": null,
+    "risky_changes": null,
+    "risky_changes_block_recommended": null,
+    "remediation_minutes": null,
+    "recovery_minutes": null,
+    "reusable_controls_created": 1,
+    "notes": [
+      "This is a whole-snapshot pilot, not a change or merge-request assessment; change-level metrics are unavailable and the advisory repository outcome is recorded separately.",
+      "Seven source-validated findings and two resolved scanner candidates await human validation before they can enter pilot accuracy metrics.",
+      "Review duration and human effort were not instrumented, so they are null rather than estimated.",
+      "Two redacting secret-scan candidates were resolved during agent review as environment-composed database strings rather than embedded credentials; they are not counted as pilot false positives until human review.",
+      "The reusable control is null-safe operational metric handling discovered during this pilot."
+    ],
+    "observed_at": "2026-09-25T17:40:36Z"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "verification_status": "unverifiable",
+  "repository": "syn-reality-avatar-main",
+  "commit": "unavailable-source-snapshot",
+  "human_owner": null,
+  "material_ai_assistance": "unknown",
+  "execution_environment": "Read-only local source snapshot supplied for an ADDER operational pilot",
+  "changed_artifacts": [],
+  "agent_permissions": [
+    "Read-only inspection of the supplied source snapshot",
+    "No network validation, package installation, service startup, deployment, or target modification"
+  ],
+  "evidence_sources": [
+    "User-supplied local source snapshot",
+    "Filesystem inventory",
+    "No .git directory was present"
+  ],
+  "inconsistencies": [],
+  "limitations": [
+    "No repository history, commit identifier, merge request, accountable owner, AI-assistance declaration, or build attestation was supplied."
+  ]
+}
